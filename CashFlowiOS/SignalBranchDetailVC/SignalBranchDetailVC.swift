@@ -15,13 +15,20 @@ class SignalBranchDetailVC: UIViewController {
     @IBOutlet weak private var branchName:UILabel!
     @IBOutlet weak private var adminPowerBtn:UIButton!{
         didSet{
-            adminPowerBtn.isHidden = false        }
+            adminPowerBtn.isHidden = true        }
+    }
+    @IBOutlet weak private var showBranchUsers:UIButton!{
+        didSet{
+            showBranchUsers.isHidden = true
+            
+        }
     }
     @IBOutlet weak private var privatereportBtn:UIButton!
     @IBOutlet weak private var balance:UILabel!
     var isAdmin:Bool?{
         didSet{
             adminPowerBtn.isHidden = false
+            showBranchUsers.isHidden = false
         }
     }
     @IBOutlet weak private var collectionView:UICollectionView!
@@ -46,11 +53,12 @@ class SignalBranchDetailVC: UIViewController {
         self.busineeName.text = business_Name
         // Do any additional setup after loading the view.
         
-        fetchAllTranscations()
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.title = branch_Name
+        fetchAllTranscations()
     }
     @IBAction private func showBusinessUsers(_ sender:UIButton){
         let vc = ShowUsers(nibName: "ShowUsers", bundle: nil)
@@ -70,7 +78,13 @@ class SignalBranchDetailVC: UIViewController {
         self.navigationItem.title = ""
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    
+    @IBAction private func addTranscation(_ sender:UIButton)
+    {
+       let vc = TranscationVC(nibName: "TranscationVC", bundle: nil)
+        vc.branch_id = branchId
+        self.navigationItem.title = ""
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
     
     
 }
@@ -142,6 +156,12 @@ extension SignalBranchDetailVC:UICollectionViewDelegate,UICollectionViewDataSour
         }
     }
     
+    @IBAction private func goToReports(_ sender:UIButton)
+    {
+        let vc = ReportsVC(nibName: "ReportsVC", bundle: nil)
+        self.navigationItem.title = ""
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 

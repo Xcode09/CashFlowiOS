@@ -26,7 +26,7 @@ class BranchDetailVC: UICollectionViewCell {
                 
                 mutableAttrString1.append(tu.1)
                 mutableAttrString1.append(makeAttributeString(myString: " Voucher", foregroundColor: UIColor.gray.cgColor))
-                mutableAttrString1.append(makeAttributeString(myString: " \(t.voucher_no)", foregroundColor: UIColor.gray.cgColor))
+                mutableAttrString1.append(makeAttributeString(myString: " \(t.voucher_no ?? "")", foregroundColor: UIColor.gray.cgColor))
                 inBalance.text = "\(t.balance)"
                 outBalance.text = nil
                 balance.text = "\(t.total_balance)"
@@ -41,7 +41,7 @@ class BranchDetailVC: UICollectionViewCell {
                 
                 mutableAttrString1.append(tu.1)
                 mutableAttrString1.append(makeAttributeString(myString: " Voucher", foregroundColor: UIColor.gray.cgColor))
-                mutableAttrString1.append(makeAttributeString(myString: " \(t.voucher_no)", foregroundColor: UIColor.gray.cgColor))
+                mutableAttrString1.append(makeAttributeString(myString: " \(t.voucher_no ?? "")", foregroundColor: UIColor.gray.cgColor))
                 outBalance.text = "\(t.balance)"
                 inBalance.text = nil
                 balance.text = "\(t.total_balance)"

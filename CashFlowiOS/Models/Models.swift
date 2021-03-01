@@ -40,7 +40,7 @@ struct BusinessesDataModel:Codable {
 
 struct BusinessBranch:Codable{
     let response:String
-    let total_balance:String
+    let total_balance:Int
     let data:[BranchDataModel]
 }
 
@@ -63,12 +63,12 @@ struct TranscationDataModel:Codable{
     let id: Int
     var description:String
     let category: Int
-    let voucher_no:String
+    let voucher_no:String?
     let is_in_or_out: Bool
     let user_id:String
     let balance: Int
     let total_balance:String
-    let voucher_url:String
+    let voucher_url:String?
     let user_email:String?
     let created_at: String
     
@@ -86,6 +86,18 @@ struct ErrorResponse:Codable{
     let response:String
     let message:String
 }
+
+struct Reports:Codable{
+    let response:String
+    let totalBalance:Int
+    let data:[ReportData]
+    
+}
+struct ReportData:Codable{
+    let balance: Int
+    //let created_at: String
+}
+
 
 struct Users:Codable{
     let response:String

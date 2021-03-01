@@ -17,12 +17,22 @@ class ViewTranscationVC: UIViewController {
     }
     
     @IBOutlet weak var vocherNumber:UITextField!
-    @IBOutlet weak var particulars:UITextView!
+    @IBOutlet weak var particulars:UITextView!{
+        didSet{
+            particulars.applyCardView()
+        }
+    }
     
-    @IBOutlet weak var balanceView:UITextView!
+    @IBOutlet weak var balanceView:UITextView!{
+        didSet{
+            balanceView.applyCardView()
+        }
+    }
     @IBOutlet weak var saleBtn:UIButton!{
         didSet{
+           
             saleBtn.setCardView()
+            saleBtn.isEnabled = false
         }
     }
     
@@ -35,16 +45,19 @@ class ViewTranscationVC: UIViewController {
     @IBOutlet weak var receviedBtn:UIButton!{
         didSet{
             receviedBtn.setCardView()
+            receviedBtn.isEnabled = false
         }
     }
     @IBOutlet weak var expenseBtn:UIButton!{
         didSet{
             expenseBtn.setCardView()
+            receviedBtn.isEnabled = false
         }
     }
     @IBOutlet weak var sentBtn:UIButton!{
         didSet{
             sentBtn.setCardView()
+            sentBtn.isEnabled = false
         }
     }
     override func viewDidLoad() {
@@ -78,7 +91,7 @@ class ViewTranscationVC: UIViewController {
                     [unowned self] in
                     Toast.dismissActivity(superView: self.view)
                     guard let mm = model.data.first else{return}
-                    self.updateUI(data: mm)
+                    self.updateUID(data: mm)
                 }
             case .failure(let er):
                 DispatchQueue.main.async {
@@ -91,7 +104,7 @@ class ViewTranscationVC: UIViewController {
     }
 
     
-    private func updateUI(data:TranscationDataModel)
+    private func updateUID(data:TranscationDataModel)
     {
         balanceView.text = "\(data.balance)"
         particulars.text = data.description
@@ -116,7 +129,8 @@ class ViewTranscationVC: UIViewController {
             in_outLabel.text = "IN"
         }
         do{
-            let dat = try Data(contentsOf: URL(string: data.voucher_url)!)
+            guard let url = URL(string: data.voucher_url ?? "") else {return}
+            let dat = try Data(contentsOf: url)
             DispatchQueue.main.async {
                 self.vocherImage.image = UIImage(data: dat)
             }

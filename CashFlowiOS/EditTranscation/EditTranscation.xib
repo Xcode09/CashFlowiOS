@@ -193,8 +193,8 @@
                                         <constraint firstAttribute="height" constant="65" id="8xQ-LA-ZUR"/>
                                     </constraints>
                                 </stackView>
-                                <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholdertext.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="MFi-bF-Q7K">
-                                    <rect key="frame" x="8" y="556" width="398" height="267.5"/>
+                                <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MFi-bF-Q7K">
+                                    <rect key="frame" x="8" y="555" width="398" height="270"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="270" id="PNm-15-k8Z"/>
                                     </constraints>
@@ -359,7 +359,6 @@
         </view>
     </objects>
     <resources>
-        <image name="placeholdertext.fill" catalog="system" width="80" height="128"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

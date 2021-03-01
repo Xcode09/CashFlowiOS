@@ -38,11 +38,11 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W0k-IS-x0g">
-                        <rect key="frame" x="0.0" y="136" width="250" height="114"/>
+                        <rect key="frame" x="0.0" y="124" width="250" height="126"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sample Business" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="oLX-E0-cug">
-                                <rect key="frame" x="8" y="8" width="234" height="98"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sample Business" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="oLX-E0-cug">
+                                <rect key="frame" x="8" y="8" width="234" height="110"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -63,7 +63,7 @@
                 <constraint firstAttribute="trailing" secondItem="GYm-88-xlA" secondAttribute="trailing" constant="8" id="5tx-zk-YfE"/>
                 <constraint firstItem="SLT-bn-fGu" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="16" id="6qh-vV-Wp3"/>
                 <constraint firstAttribute="bottom" secondItem="W0k-IS-x0g" secondAttribute="bottom" id="AZl-lL-GEk"/>
-                <constraint firstItem="W0k-IS-x0g" firstAttribute="top" secondItem="GYm-88-xlA" secondAttribute="bottom" constant="20" id="Em3-fY-O8r"/>
+                <constraint firstItem="W0k-IS-x0g" firstAttribute="top" secondItem="GYm-88-xlA" secondAttribute="bottom" constant="8" id="Em3-fY-O8r"/>
                 <constraint firstItem="GYm-88-xlA" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="FF5-eQ-x3y"/>
                 <constraint firstAttribute="trailing" secondItem="SLT-bn-fGu" secondAttribute="trailing" constant="8" id="G3x-BB-Y22"/>
                 <constraint firstItem="W0k-IS-x0g" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="WjI-tW-zA0"/>
@@ -82,7 +82,7 @@
     </objects>
     <resources>
         <namedColor name="AccentColor">
-            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.30980392156862746" green="0.61176470588235299" blue="0.94509803921568625" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

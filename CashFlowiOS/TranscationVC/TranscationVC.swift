@@ -10,6 +10,7 @@ import UIKit
 class TranscationVC: UIViewController {
 
     var selectCategory : Int?
+    var branch_id = ""
     @IBOutlet weak var vocherImage:UIImageView!{
         didSet{
             vocherImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pickImage)))
@@ -17,9 +18,17 @@ class TranscationVC: UIViewController {
     }
     
     @IBOutlet weak var vocherNumber:UITextField!
-    @IBOutlet weak var particulars:UITextView!
+    @IBOutlet weak var particulars:UITextView!{
+        didSet{
+            particulars.applyCardView()
+        }
+    }
     
-    @IBOutlet weak var balanceView:UITextView!
+    @IBOutlet weak var balanceView:UITextView!{
+        didSet{
+            balanceView.applyCardView()
+        }
+    }
     @IBOutlet weak var saleBtn:UIButton!{
         didSet{
             saleBtn.setCardView()
@@ -64,15 +73,19 @@ class TranscationVC: UIViewController {
             sentBtn.setCardView()
         }
     }
+    @IBOutlet weak var inOut:UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        
+        self.navigationItem.title = "Add Transcation"
     }
     @IBAction private func categoryExpense(_ sender:UIButton)
     {
         selectCategory = sender.tag
-        expenseBtn.layer.borderColor = UIColor.blue.cgColor
+        inOut.text = "OUT"
+        expenseBtn.setState()
         saleBtn.setCardView()
         sentBtn.setCardView()
         receviedBtn.setCardView()
@@ -80,7 +93,8 @@ class TranscationVC: UIViewController {
     @IBAction private func categorySale(_ sender:UIButton)
     {
         selectCategory = sender.tag
-        saleBtn.layer.borderColor = UIColor.blue.cgColor
+        inOut.text = "IN"
+        saleBtn.setState(color: .white, backClr: UIColor(named: "INCLR")!)
         expenseBtn.setCardView()
         sentBtn.setCardView()
         receviedBtn.setCardView()
@@ -88,7 +102,8 @@ class TranscationVC: UIViewController {
     @IBAction private func categorySent(_ sender:UIButton)
     {
         selectCategory = sender.tag
-        sentBtn.layer.borderColor = UIColor.blue.cgColor
+        inOut.text = "OUT"
+        sentBtn.setState()
         saleBtn.setCardView()
         expenseBtn.setCardView()
         receviedBtn.setCardView()
@@ -96,13 +111,51 @@ class TranscationVC: UIViewController {
     @IBAction private func categoryReceved(_ sender:UIButton)
     {
         selectCategory = sender.tag
-        receviedBtn.layer.borderColor = UIColor.blue.cgColor
+        inOut.text = "IN"
+        receviedBtn.setState(color: .white, backClr: UIColor(named: "INCLR")!)
+        
         saleBtn.setCardView()
         sentBtn.setCardView()
         expenseBtn.setCardView()
     }
     
     @objc private func pickImage(){
+        let alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
+                self.openCamera()
+            }))
+
+            alert.addAction(UIAlertAction(title: "Gallery", style: .default, handler: { _ in
+                self.openGallary()
+            }))
+
+            alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
+        
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func openCamera()
+    {
+        if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera))
+        {
+            let pickerController = UIImagePickerController()
+            pickerController.delegate = self
+            pickerController.allowsEditing = true
+            pickerController.mediaTypes = ["public.image"]
+            pickerController.sourceType = .camera
+            self.present(pickerController, animated: true, completion: nil)
+        }
+        else
+        {
+            let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+
+    func openGallary()
+    {
         let pickerController = UIImagePickerController()
         pickerController.delegate = self
         pickerController.allowsEditing = true
@@ -112,34 +165,46 @@ class TranscationVC: UIViewController {
     }
     
     @IBAction private func saveBtn(_ sender:UIButton){
-        guard let image = vocherImage.image,
-              let vocherNumber = vocherNumber.text,
-              vocherNumber != "",
-              let particularText = particulars.text,
+        guard let particularText = particulars.text,
               let category = selectCategory,
               let balance = balanceView.text,
               let user = LocalData.getUser(),
-              let userEmail = user.data.first?.email
+              let userEmail = user.data.first?.email,
+              let pass = LocalData.getUserPassword()
         else {
             return Toast.showToast(superView: self.view, message: "Please fill all fields")
         }
-        let para = [
-            "category":"\(category)",
-            "description":particularText,
-            "voucher_no":vocherNumber,
-            "branch_id":"6",
-            "balance":"\(balance)",
-            "email":"\(userEmail)",
-            "password":"12345678"
-        ]
-        
+        var para = [String:String]()
+        if vocherNumber.text == nil {
+            para = [
+                "category":"\(category)",
+                "description":particularText,
+                "branch_id":branch_id,
+                "balance":"\(balance)",
+                "email":"\(userEmail)",
+                "password":pass
+            ]
+        }
+        else
+        {
+            para = [
+                "category":"\(category)",
+                "description":particularText,
+                "voucher_no":vocherNumber.text ?? "",
+                "branch_id":branch_id,
+                "balance":"\(balance)",
+                "email":"\(userEmail)",
+                "password":pass
+            ]
+        }
         Toast.showActivity(superView: self.view)
-        DataService.shared.uploadTranscation(urlPath: EndPoints.transcation, para: para, image:image) { (result) in
+        DataService.shared.uploadTranscation(urlPath: EndPoints.transcation, para: para, image:vocherImage.image) { (result) in
             switch result{
             case .success(let model):
                 DispatchQueue.main.async {
                     [unowned self] in
                     Toast.dismissActivity(superView: self.view)
+                    Toast.showToast(superView: self.view, message: "Successfully added transcation")
                     print(model)
                 }
             case .failure(let er):
@@ -174,6 +239,19 @@ extension TranscationVC: UIImagePickerControllerDelegate,UINavigationControllerD
 
 extension UIButton{
     func setCardView(){
+        layer.cornerRadius = 10.0
+        layer.borderColor = UIColor.gray.cgColor
+        layer.borderWidth = 0.3
+        layer.shadowColor = UIColor.lightText.cgColor
+        layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        layer.shadowRadius = 6.0
+        layer.shadowOpacity = 0.6
+        backgroundColor = .white
+        setTitleColor(.black, for: .normal)
+    }
+}
+extension UIView{
+    func applyCardView(){
         layer.cornerRadius = 10.0
         layer.borderColor = UIColor.gray.cgColor
         layer.borderWidth = 0.3

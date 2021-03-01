@@ -25,16 +25,7 @@ class ShowUsers: UITableViewController {
         super.viewDidLoad()
 
         self.tableView.register(ShowUserCell.self, forCellReuseIdentifier: cellIdentifer)
-        if isBranch != nil
-        {
-            branchName.isHidden = false
-            branchName.text = branch_Name
-            fetchAllBuisnessUsers(url: EndPoints.get_branch_users, para: ["id":branch_Id])
-        }
-        else
-        {
-            fetchAllBuisnessUsers(url: EndPoints.get_business_users, para: ["id":business_Id])
-        }
+        
         let customView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
         customView.backgroundColor = .clear
         let button = UIButton()
@@ -57,7 +48,21 @@ class ShowUsers: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationItem.title = "\(branch_Name != "" ? branch_Name : business_Name) Users"
+        
+        
+        if isBranch != nil
+        {
+            branchName.isHidden = false
+            branchName.text = branch_Name
+            fetchAllBuisnessUsers(url: EndPoints.get_branch_users, para: ["id":branch_Id])
+            self.navigationItem.title = "\(branch_Name != "" ? branch_Name : business_Name) Users"
+        }
+        else
+        {
+            fetchAllBuisnessUsers(url: EndPoints.get_business_users, para: ["id":business_Id])
+            self.navigationItem.title = "\(branch_Name != "" ? branch_Name : business_Name) Users"
+        }
+        
     }
 
     // MARK: - Table view data source

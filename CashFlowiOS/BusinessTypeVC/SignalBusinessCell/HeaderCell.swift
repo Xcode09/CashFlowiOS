@@ -12,7 +12,7 @@ class HeaderCell: UICollectionReusableView {
     @IBOutlet weak var busineeName:UILabel!
     @IBOutlet weak var adminPowerBtn:UIButton!{
         didSet{
-            adminPowerBtn.isHidden = false
+            adminPowerBtn.isHidden = true
         }
     }
     @IBOutlet weak var reportBtn:UIButton!

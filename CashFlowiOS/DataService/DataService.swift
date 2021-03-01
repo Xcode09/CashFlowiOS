@@ -44,7 +44,7 @@ final class DataService{
                 }
                 do{
                     let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any]
-                    let message = json?["message"] as! String
+                    let _ = json?["message"] as! String
                     compilationHandler(.success(json))
                 }
                 catch let er {
@@ -86,6 +86,7 @@ final class DataService{
                 do{
                     let user = try JSONDecoder.init().decode(Login.self, from: data)
                     LocalData.saveUser(user: user)
+                    LocalData.saveUserPassword(para["password"]!)
                     print(user.data)
                     compilationHandler(.success(user))
                 }
@@ -98,7 +99,7 @@ final class DataService{
     
     
     
-    func fetchAllUserBuisness(urlPath: String,para:[String:String],compilationHandler:@escaping (Result<[BusinessesDataModel]>) -> Void)
+    func fetchAllUserBuisness(urlPath: String,para:[String:String],compilationHandler:@escaping (Result<Businesses>) -> Void)
     {
         // ActivityController.init().showIndicator()
         
@@ -128,7 +129,7 @@ final class DataService{
                 }
                 do{
                     let user = try JSONDecoder.init().decode(Businesses.self, from: data)
-                    compilationHandler(.success(user.data))
+                    compilationHandler(.success(user))
                 }
                 catch let er {
                     compilationHandler(.failure(ServiceError.custom(er.localizedDescription)))
@@ -220,14 +221,15 @@ final class DataService{
         }.resume()
     }
     
-    func uploadTranscation(urlPath: String,para:[String:String],image:UIImage,compilationHandler:@escaping (Result<String>) -> Void)
+    func uploadTranscation(urlPath: String,para:[String:String],image:UIImage?,compilationHandler:@escaping (Result<String>) -> Void)
     {
         // ActivityController.init().showIndicator()
-        guard let imageData = image.jpegData(compressionQuality: 0.5) else {return}
+//        guard let imageData = image.jpegData(compressionQuality: 0.5) else {return}
         Alamofire.upload(multipartFormData: { (mutlipart) in
-            
-            mutlipart.append(imageData, withName: "file", fileName: "voucher\(Date().timeIntervalSince1970)", mimeType: "image/jpg")
-            
+            if image != nil {
+                guard let imageData = image?.jpegData(compressionQuality: 0.5) else {return}
+                mutlipart.append(imageData, withName: "file", fileName: "voucher\(Date().timeIntervalSince1970)", mimeType: "image/jpg")
+            }
             for (key, value) in para {
                 if let data = value.data(using: .utf8) {
                     mutlipart.append(data, withName: key)
@@ -393,6 +395,44 @@ final class DataService{
         }.resume()
     }
     
+    func fetchReports(urlPath: String,para:[String:String],compilationHandler:@escaping (Result<Reports>) -> Void)
+    {
+        guard var myURL = URLComponents(string: urlPath) else {
+            return compilationHandler(.failure(ServiceError.custom("Invalid URL")))
+        }
+        var items = [URLQueryItem]()
+        for (key,value) in para {
+            items.append(URLQueryItem(name: key, value: value))
+        }
+        myURL.queryItems = items
+        
+        guard let url = myURL.url else {
+            return compilationHandler(.failure(ServiceError.custom("No URL")))}
+        
+        var request = URLRequest(url:url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: .infinity)
+        request.httpMethod = "POST"
+        URLSession.shared.dataTask(with: request) { (Data, response, error) in
+            if let httpRes = response as? HTTPURLResponse, httpRes.statusCode != 200
+            {
+                compilationHandler(.failure(ServiceError.other))
+            }
+            else
+            {
+               
+                guard let data = Data else {
+                    return compilationHandler(.failure(ServiceError.other))
+                }
+                do{
+                    let user = try JSONDecoder.init().decode(Reports.self, from: data)
+                    compilationHandler(.success(user))
+                }
+                catch let er {
+                    compilationHandler(.failure(ServiceError.custom(er.localizedDescription)))
+                }
+            }
+        }.resume()
+    }
+    
     
     
     private func generateBoundary() -> String {
@@ -452,7 +492,7 @@ final class DataService{
             }
             else
             {
-                guard let data = Data else {
+                guard let _ = Data else {
                     return compilationHandler(.failure(ServiceError.other))
                 }
                 compilationHandler(.success("Successfully Saved"))

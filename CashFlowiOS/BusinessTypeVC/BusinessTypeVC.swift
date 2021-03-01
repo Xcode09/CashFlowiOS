@@ -13,8 +13,10 @@ private let reuseHeaderIdentifier = "Header"
 private let reuseFooterIdentifier = "Footer"
 
 private let reuseEmptyIdentifier = "EmptyCell"
+var globalBusiness = [BusinessesDataModel]()
 class BusinessTypeVC: UICollectionViewController,UICollectionViewDelegateFlowLayout{
     private lazy var dataArr = [BusinessesDataModel]()
+    private var businessD : Businesses?
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -33,12 +35,13 @@ class BusinessTypeVC: UICollectionViewController,UICollectionViewDelegateFlowLay
         
         // Do any additional setup after loading the view.
         
-        fetchAllUserBuisness()
+        
     
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.title = "Cash Flow"
+        fetchAllUserBuisness()
     }
 
     /*
@@ -74,6 +77,9 @@ class BusinessTypeVC: UICollectionViewController,UICollectionViewDelegateFlowLay
         let vc = SignalBusinessBranchVCCollectionViewController(nibName: "SignalBusinessBranchVCCollectionViewController", bundle: nil)
         vc.business_id = "\(self.dataArr[indexPath.item].id)"
         vc.business_name = "\(self.dataArr[indexPath.item].name)"
+        if let us = LocalData.getUser(),us.data.first?.user_type == 0 {
+            //vc.isAdmin = true
+        }
         self.navigationItem.title = ""
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -86,7 +92,7 @@ class BusinessTypeVC: UICollectionViewController,UICollectionViewDelegateFlowLay
         if kind == UICollectionView.elementKindSectionHeader{
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier:
                reuseHeaderIdentifier, for: indexPath) as! Header
-            header.dateLabel.text = "INR\(9)"
+            header.dateLabel.text = "INR \(businessD?.total_balance ?? 0)"
             return header
         }else if kind == UICollectionView.elementKindSectionFooter,let id = LocalData.getUserType(),id == ADMIN
         {
@@ -119,7 +125,12 @@ class BusinessTypeVC: UICollectionViewController,UICollectionViewDelegateFlowLay
         //--------------------------------------------------------------------------------
 
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            return CGSize(width: (self.collectionView.frame.width/3.0) - 8 , height: (self.collectionView.frame.height/4.7))
+            let size = UIScreen.main.bounds.size
+
+            // 8 - space between 3 collection cells
+            // 4 - 4 times gap will appear between cell.
+                    return CGSize(width: (size.width - 4 * 8)/3, height: 180)
+//            return CGSize(width: (self.collectionView.frame.width/3.0) - 8 , height: (self.collectionView.frame.height/4.7))
         }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
@@ -142,12 +153,15 @@ class BusinessTypeVC: UICollectionViewController,UICollectionViewDelegateFlowLay
     
     private func fetchAllUserBuisness(){
         guard let user = LocalData.getUser(), let id = user.data.first?.id else {return}
+        self.dataArr.removeAll()
         DataService.shared.fetchAllUserBuisness(urlPath: EndPoints.all_business, para: ["id":"\(id)"]) { (result) in
             switch result{
             case .success(let model):
                 DispatchQueue.main.async {
                     [weak self] in
-                    self?.dataArr = model
+                    self?.businessD = model
+                    self?.dataArr = model.data
+                    globalBusiness = model.data
                     self?.collectionView.reloadData()
                 }
             case .failure(let er):

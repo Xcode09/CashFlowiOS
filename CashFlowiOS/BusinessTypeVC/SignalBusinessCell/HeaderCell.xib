@@ -34,7 +34,7 @@
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U9n-i9-WW6">
                                             <rect key="frame" x="160" y="0.0" width="90" height="34"/>
-                                            <state key="normal" image="key.fill" catalog="system"/>
+                                            <state key="normal" image="icon_key"/>
                                             <connections>
                                                 <action selector="showBusinessUsers:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="3E3-Tr-4C4"/>
                                             </connections>
@@ -49,7 +49,7 @@
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4o4-kn-Aws">
                                             <rect key="frame" x="0.0" y="0.0" width="113" height="34"/>
-                                            <state key="normal" image="key.fill" catalog="system"/>
+                                            <state key="normal" image="icon_reports"/>
                                             <connections>
                                                 <action selector="showReports:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="1v8-Lf-DHx"/>
                                             </connections>
@@ -97,6 +97,7 @@
         </collectionReusableView>
     </objects>
     <resources>
-        <image name="key.fill" catalog="system" width="83" height="128"/>
+        <image name="icon_key" width="35" height="35"/>
+        <image name="icon_reports" width="35" height="35"/>
     </resources>
 </document>

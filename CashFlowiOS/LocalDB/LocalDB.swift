@@ -73,6 +73,14 @@ struct LocalData{
         UserDefaults.standard.set(str, forKey: UserDefaultskeys.userPassword)
         UserDefaults.standard.synchronize()
     }
+    static func getUserPassword()->String
+    {
+        if let pass = UserDefaults.standard.value(forKey: UserDefaultskeys.userPassword) as? String
+        {
+            return pass
+        }
+        return ""
+    }
     static func saveUserSkills(_ str:String)
     {
         UserDefaults.standard.set(str, forKey: "skills")

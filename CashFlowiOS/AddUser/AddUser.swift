@@ -48,7 +48,7 @@ class AddUser: UIViewController {
         { (result) in
             switch result
             {
-            case .success(let _):
+            case .success:
                 DispatchQueue.main.async {
                     [weak self] in
                     Toast.dismissActivity(superView: self!.view)

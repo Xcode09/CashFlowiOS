@@ -29,12 +29,13 @@ class SignalBusinessBranchVCCollectionViewController: UICollectionViewController
         self.collectionView.register(EmptyCell.self, forCellWithReuseIdentifier: reuseEmptyIdentifier)
         self.navigationController?.navigationBar.prefersLargeTitles = false
        
-        fetchBranchesOfBusiness()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.title = business_name
+        fetchBranchesOfBusiness()
     }
     
     
@@ -62,6 +63,9 @@ class SignalBusinessBranchVCCollectionViewController: UICollectionViewController
         vc.branchId = "\(dataArr[indexPath.item].id)"
         vc.branch_Name = "\(dataArr[indexPath.item].name)"
         vc.business_Id = dataArr[indexPath.item].business_type_id ?? ""
+        if let user = LocalData.getUser(), user.data.first?.user_type == ADMIN {
+            vc.isAdmin = true
+        }
         vc.business_Name = business_name
         self.navigationItem.title = ""
         self.navigationController?.pushViewController(vc, animated: true)
@@ -71,7 +75,10 @@ class SignalBusinessBranchVCCollectionViewController: UICollectionViewController
         if kind == UICollectionView.elementKindSectionHeader{
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier:
                                                                             reuseHeaderIdentifier, for: indexPath) as! HeaderCell
-            header.balance.text = obj?.total_balance ?? "N/A"
+            header.balance.text = "INR \(obj?.total_balance ?? 0)"
+            if let us = LocalData.getUser(),us.data.first?.user_type == 0 {
+                header.isAdmin = true
+            }
             header.busineeName.text = business_name
             header.showBusinessUserTapped = {
                 [weak self] in
@@ -106,6 +113,7 @@ class SignalBusinessBranchVCCollectionViewController: UICollectionViewController
     private func fetchBranchesOfBusiness()
     {
         guard let user = LocalData.getUser(), let id = user.data.first?.id else {return}
+        self.dataArr.removeAll()
         DataService.shared.fetchBuisnessBranches(urlPath: EndPoints.get_all_branches, para: ["id":"\(id)","business_id":business_id]) { (result) in
             switch result{
             case .success(let model):
@@ -160,7 +168,7 @@ func setupHeaderViews()   {
 
     dateLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
     dateLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-    dateLabel.widthAnchor.constraint(equalToConstant: 200).isActive = true
+    dateLabel.widthAnchor.constraint(equalToConstant: 240).isActive = true
     dateLabel.heightAnchor.constraint(equalToConstant: 46).isActive = true
 }
     

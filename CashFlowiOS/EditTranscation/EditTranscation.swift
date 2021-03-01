@@ -19,9 +19,17 @@ class EditTranscation: UIViewController {
     }
     
     @IBOutlet weak var vocherNumber:UITextField!
-    @IBOutlet weak var particulars:UITextView!
+    @IBOutlet weak var particulars:UITextView!{
+        didSet{
+            particulars.applyCardView()
+        }
+    }
     
-    @IBOutlet weak var balanceView:UITextView!
+    @IBOutlet weak var balanceView:UITextView!{
+        didSet{
+            balanceView.applyCardView()
+        }
+    }
     @IBOutlet weak var in_outLabel:UILabel!
     @IBOutlet weak var saleBtn:UIButton!{
         didSet{
@@ -108,6 +116,42 @@ class EditTranscation: UIViewController {
     }
     
     @objc private func pickImage(){
+        let alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
+                self.openCamera()
+            }))
+
+            alert.addAction(UIAlertAction(title: "Gallery", style: .default, handler: { _ in
+                self.openGallary()
+            }))
+
+            alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
+        
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func openCamera()
+    {
+        if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera))
+        {
+            let pickerController = UIImagePickerController()
+            pickerController.delegate = self
+            pickerController.allowsEditing = true
+            pickerController.mediaTypes = ["public.image"]
+            pickerController.sourceType = .camera
+            self.present(pickerController, animated: true, completion: nil)
+        }
+        else
+        {
+            let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+
+    func openGallary()
+    {
         let pickerController = UIImagePickerController()
         pickerController.delegate = self
         pickerController.allowsEditing = true
@@ -117,30 +161,47 @@ class EditTranscation: UIViewController {
     }
     
     @IBAction private func saveBtn(_ sender:UIButton){
-        guard let image = vocherImage.image,
-              let vocherNumber = vocherNumber.text,
-              vocherNumber != "",
+        guard
               let particularText = particulars.text,
               let category = selectCategory,
               let balance = balanceView.text,
               let user = LocalData.getUser(),
-              let userEmail = user.data.first?.email
+              let userEmail = user.data.first?.email,
+              let pass = LocalData.getUserPassword()
         else {
             return Toast.showToast(superView: self.view, message: "Please fill all fields")
         }
-        let para = [
-            "category":"\(category)",
-            "description":particularText,
-            "voucher_no":vocherNumber,
-            "branch_id":branchId,
-            "balance":"\(balance)",
-            "email":"\(userEmail)",
-            "password":"12345678",
-            "transcation_id":transcationId
-        ]
-        
+        if vocherNumber.text == nil{
+            
+        }
+        var para = [String:String]()
+        if vocherNumber.text == nil
+        {
+            para = [
+                "category":"\(category)",
+                "description":particularText,
+                "branch_id":branchId,
+                "balance":"\(balance)",
+                "email":"\(userEmail)",
+                "password":pass,
+                "transcation_id":transcationId
+            ]
+        }
+        else
+        {
+            para = [
+                "category":"\(category)",
+                "description":particularText,
+                "voucher_no":vocherNumber.text ?? "",
+                "branch_id":branchId,
+                "balance":"\(balance)",
+                "email":"\(userEmail)",
+                "password":pass,
+                "transcation_id":transcationId
+            ]
+        }
         Toast.showActivity(superView: self.view)
-        DataService.shared.uploadTranscation(urlPath: EndPoints.edit_transcation, para: para, image:image) { (result) in
+        DataService.shared.uploadTranscation(urlPath: EndPoints.edit_transcation, para: para, image:vocherImage.image) { (result) in
             switch result{
             case .success(let model):
                 DispatchQueue.main.async {
@@ -157,8 +218,6 @@ class EditTranscation: UIViewController {
             }
         }
     }
-
-    
     private func updateUI(data:TranscationDataModel)
     {
         selectCategory = data.category
@@ -185,11 +244,14 @@ class EditTranscation: UIViewController {
             in_outLabel.text = "IN"
         }
         do{
-            let dat = try Data(contentsOf: URL(string: data.voucher_url)!)
+            guard let url = URL(string: data.voucher_url ?? "") else{return}
+            let dat = try Data(contentsOf:url)
             DispatchQueue.main.async {
                 self.vocherImage.image = UIImage(data: dat)
             }
-        }catch{
+        }
+        catch
+        {
             
         }
         

@@ -12,6 +12,14 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ReportsVC" customModule="CashFlowiOS" customModuleProvider="target">
             <connections>
+                <outlet property="branchType" destination="oAy-gs-Utl" id="0uM-pw-UpX"/>
+                <outlet property="businessType" destination="akC-pD-qkm" id="o1V-cD-fwv"/>
+                <outlet property="customRangeView" destination="hg4-yn-4zx" id="Asz-86-bIC"/>
+                <outlet property="endDateView" destination="IKD-q1-H69" id="HA1-m6-ZOD"/>
+                <outlet property="inCategory" destination="3wP-G7-nM8" id="kC0-gh-G6n"/>
+                <outlet property="inChart" destination="ESe-TG-0F5" id="i2E-f7-49B"/>
+                <outlet property="inRange" destination="dBe-Xn-wvf" id="v8I-TP-q5Y"/>
+                <outlet property="startDateView" destination="amK-Ch-qEi" id="bCk-ba-3R0"/>
                 <outlet property="view" destination="ndR-p5-3NH" id="rjR-7J-SFd"/>
             </connections>
         </placeholder>
@@ -24,34 +32,40 @@
                     <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kZd-il-Thn">
-                            <rect key="frame" x="0.0" y="8" width="414" height="1100"/>
+                            <rect key="frame" x="0.0" y="8" width="414" height="1000"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F4g-ZF-XI9">
                                     <rect key="frame" x="8" y="8" width="398" height="250"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lQf-Dm-ML0">
-                                            <rect key="frame" x="20" y="20" width="358" height="80"/>
+                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="lQf-Dm-ML0">
+                                            <rect key="frame" x="20" y="20" width="358" height="110"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="rQm-oQ-vqc">
-                                                    <rect key="frame" x="0.0" y="0.0" width="208" height="80"/>
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="rQm-oQ-vqc">
+                                                    <rect key="frame" x="0.0" y="0.0" width="188" height="110"/>
                                                     <subviews>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="akC-pD-qkm">
-                                                            <rect key="frame" x="0.0" y="0.0" width="208" height="35"/>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="akC-pD-qkm">
+                                                            <rect key="frame" x="0.0" y="0.0" width="188" height="45"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                             <state key="normal" title="Business">
                                                                 <color key="titleColor" systemColor="labelColor"/>
                                                             </state>
+                                                            <connections>
+                                                                <action selector="businessTypeBtn:" destination="-1" eventType="touchUpInside" id="q0K-oK-BUQ"/>
+                                                            </connections>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oAy-gs-Utl">
-                                                            <rect key="frame" x="0.0" y="45" width="208" height="35"/>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oAy-gs-Utl">
+                                                            <rect key="frame" x="0.0" y="65" width="188" height="45"/>
                                                             <state key="normal" title="Business Type">
                                                                 <color key="titleColor" systemColor="labelColor"/>
                                                             </state>
+                                                            <connections>
+                                                                <action selector="branchTypeBtn:" destination="-1" eventType="touchUpInside" id="qhV-Kq-SmD"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                 </stackView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pYM-pc-NhC">
-                                                    <rect key="frame" x="208" y="0.0" width="150" height="80"/>
+                                                    <rect key="frame" x="208" y="0.0" width="150" height="110"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="150" id="wRY-DI-G2A"/>
@@ -59,47 +73,59 @@
                                                 </view>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="80" id="eda-U2-dey"/>
+                                                <constraint firstAttribute="height" constant="110" id="eda-U2-dey"/>
                                             </constraints>
                                         </stackView>
-                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="BuA-EM-Ab6">
-                                            <rect key="frame" x="20" y="115" width="358" height="60"/>
+                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="BuA-EM-Ab6">
+                                            <rect key="frame" x="20" y="145" width="358" height="45"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dBe-Xn-wvf">
-                                                    <rect key="frame" x="0.0" y="0.0" width="179" height="60"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dBe-Xn-wvf">
+                                                    <rect key="frame" x="0.0" y="0.0" width="169" height="45"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <state key="normal" title="This Month">
                                                         <color key="titleColor" systemColor="labelColor"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="inRangeBtn:" destination="-1" eventType="touchUpInside" id="NQd-i4-166"/>
+                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3wP-G7-nM8">
-                                                    <rect key="frame" x="179" y="0.0" width="179" height="60"/>
+                                                    <rect key="frame" x="189" y="0.0" width="169" height="45"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <state key="normal" title="Total In">
                                                         <color key="titleColor" systemColor="labelColor"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="inCategoryBtn:" destination="-1" eventType="touchUpInside" id="NYf-oj-CyF"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="60" id="qzU-ze-Xua"/>
+                                                <constraint firstAttribute="height" constant="45" id="qzU-ze-Xua"/>
                                             </constraints>
                                         </stackView>
-                                        <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="hg4-yn-4zx">
-                                            <rect key="frame" x="20" y="183" width="358" height="60"/>
+                                        <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="hg4-yn-4zx">
+                                            <rect key="frame" x="20" y="198" width="358" height="60"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0N3-xe-ZTW">
-                                                    <rect key="frame" x="0.0" y="0.0" width="179" height="60"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <state key="normal" title="This Month">
-                                                        <color key="titleColor" systemColor="labelColor"/>
-                                                    </state>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1di-4g-cUm">
-                                                    <rect key="frame" x="179" y="0.0" width="179" height="60"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <state key="normal" title="Total In">
-                                                        <color key="titleColor" systemColor="labelColor"/>
-                                                    </state>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Select Start Date" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="amK-Ch-qEi">
+                                                    <rect key="frame" x="0.0" y="0.0" width="140" height="60"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="140" id="pTy-Eb-lJR"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Select End Date" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IKD-q1-H69">
+                                                    <rect key="frame" x="160" y="0.0" width="132" height="60"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xuB-NA-eqL">
+                                                    <rect key="frame" x="312" y="0.0" width="46" height="60"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="46" id="UAV-L7-QqT"/>
+                                                    </constraints>
+                                                    <state key="normal" image="magnifyingglass" catalog="system"/>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -121,95 +147,25 @@
                                         <constraint firstAttribute="trailing" secondItem="lQf-Dm-ML0" secondAttribute="trailing" constant="20" id="v9R-UE-UpH"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pIX-1h-fMD">
-                                    <rect key="frame" x="8" y="548" width="398" height="100"/>
-                                    <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="lVw-om-o5O">
-                                            <rect key="frame" x="8" y="8" width="382" height="84"/>
-                                            <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="3wK-yE-FPA">
-                                                    <rect key="frame" x="0.0" y="0.0" width="382" height="84"/>
-                                                    <subviews>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tLa-os-ybh">
-                                                            <rect key="frame" x="0.0" y="0.0" width="191" height="84"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                            <state key="normal" title="This Month">
-                                                                <color key="titleColor" systemColor="labelColor"/>
-                                                            </state>
-                                                        </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q3Q-t5-miU">
-                                                            <rect key="frame" x="191" y="0.0" width="191" height="84"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                            <state key="normal" title="Total In">
-                                                                <color key="titleColor" systemColor="labelColor"/>
-                                                            </state>
-                                                        </button>
-                                                    </subviews>
-                                                </stackView>
-                                                <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="PFq-lA-JYF">
-                                                    <rect key="frame" x="0.0" y="0.0" width="382" height="0.0"/>
-                                                    <subviews>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gnT-IN-bG5">
-                                                            <rect key="frame" x="0.0" y="0.0" width="191" height="0.0"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                            <state key="normal" title="This Month">
-                                                                <color key="titleColor" systemColor="labelColor"/>
-                                                            </state>
-                                                        </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BS4-ec-4Ca">
-                                                            <rect key="frame" x="191" y="0.0" width="191" height="0.0"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                            <state key="normal" title="Total In">
-                                                                <color key="titleColor" systemColor="labelColor"/>
-                                                            </state>
-                                                        </button>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                        </stackView>
-                                    </subviews>
-                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                    <constraints>
-                                        <constraint firstAttribute="bottom" secondItem="lVw-om-o5O" secondAttribute="bottom" constant="8" id="2be-v9-r6v"/>
-                                        <constraint firstAttribute="trailing" secondItem="lVw-om-o5O" secondAttribute="trailing" constant="8" id="X61-xP-y9x"/>
-                                        <constraint firstAttribute="height" constant="100" id="tiK-dw-Qon"/>
-                                        <constraint firstItem="lVw-om-o5O" firstAttribute="top" secondItem="pIX-1h-fMD" secondAttribute="top" constant="8" id="xEo-XZ-9se"/>
-                                        <constraint firstItem="lVw-om-o5O" firstAttribute="leading" secondItem="pIX-1h-fMD" secondAttribute="leading" constant="8" id="ywl-kk-TEa"/>
-                                    </constraints>
-                                </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ESe-TG-0F5">
-                                    <rect key="frame" x="8" y="278" width="398" height="250"/>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ESe-TG-0F5" customClass="LineChartView" customModule="Charts">
+                                    <rect key="frame" x="8" y="278" width="398" height="380"/>
                                     <color key="backgroundColor" name="AccentColor"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="250" id="ZLz-2z-9m5"/>
-                                    </constraints>
-                                </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f0l-kL-hw3">
-                                    <rect key="frame" x="8" y="668" width="398" height="250"/>
-                                    <color key="backgroundColor" name="AccentColor"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="250" id="VvF-as-Xzg"/>
-                                        <constraint firstAttribute="height" constant="250" id="uNH-jW-GOR"/>
+                                        <constraint firstAttribute="height" constant="380" id="ZLz-2z-9m5"/>
                                     </constraints>
                                 </view>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="trailing" secondItem="f0l-kL-hw3" secondAttribute="trailing" constant="8" id="0as-Wn-XsM"/>
                                 <constraint firstItem="ESe-TG-0F5" firstAttribute="top" secondItem="F4g-ZF-XI9" secondAttribute="bottom" constant="20" id="Jyt-yD-Z40"/>
-                                <constraint firstItem="f0l-kL-hw3" firstAttribute="leading" secondItem="kZd-il-Thn" secondAttribute="leading" constant="8" id="KV5-kK-aM6"/>
-                                <constraint firstItem="f0l-kL-hw3" firstAttribute="top" secondItem="pIX-1h-fMD" secondAttribute="bottom" constant="20" id="LKE-WY-BoP"/>
                                 <constraint firstAttribute="trailing" secondItem="F4g-ZF-XI9" secondAttribute="trailing" constant="8" id="OpO-MB-FcQ"/>
                                 <constraint firstAttribute="trailing" secondItem="ESe-TG-0F5" secondAttribute="trailing" constant="8" id="SnB-lI-E92"/>
-                                <constraint firstAttribute="height" constant="1100" id="Tc9-2y-kWE"/>
+                                <constraint firstAttribute="height" constant="1000" id="Tc9-2y-kWE"/>
                                 <constraint firstItem="F4g-ZF-XI9" firstAttribute="leading" secondItem="kZd-il-Thn" secondAttribute="leading" constant="8" id="UQZ-ad-G8I"/>
                                 <constraint firstItem="F4g-ZF-XI9" firstAttribute="top" secondItem="kZd-il-Thn" secondAttribute="top" constant="8" id="d3w-Zr-yJp"/>
-                                <constraint firstItem="pIX-1h-fMD" firstAttribute="leading" secondItem="kZd-il-Thn" secondAttribute="leading" constant="8" id="fHe-IB-3P2"/>
                                 <constraint firstItem="ESe-TG-0F5" firstAttribute="leading" secondItem="kZd-il-Thn" secondAttribute="leading" constant="8" id="j8D-5H-WdV"/>
-                                <constraint firstAttribute="trailing" secondItem="pIX-1h-fMD" secondAttribute="trailing" constant="8" id="joy-0k-1la"/>
                                 <constraint firstItem="ESe-TG-0F5" firstAttribute="leading" secondItem="kZd-il-Thn" secondAttribute="leading" constant="8" id="lql-es-hmO"/>
                                 <constraint firstAttribute="trailing" secondItem="ESe-TG-0F5" secondAttribute="trailing" constant="8" id="oKR-pk-nZR"/>
-                                <constraint firstItem="pIX-1h-fMD" firstAttribute="top" secondItem="ESe-TG-0F5" secondAttribute="bottom" constant="20" id="oTT-mW-mIH"/>
                             </constraints>
                         </view>
                     </subviews>
@@ -234,8 +190,9 @@
         </view>
     </objects>
     <resources>
+        <image name="magnifyingglass" catalog="system" width="128" height="115"/>
         <namedColor name="AccentColor">
-            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.30980392156862746" green="0.61176470588235299" blue="0.94509803921568625" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

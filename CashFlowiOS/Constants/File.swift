@@ -12,14 +12,27 @@ let Expense = 3
 let Sent = 4
 let Sale = 1
 let Received = 2
+let Total_In = 6
+let Total_Out = 7
 let IN = true
 let OUT = false
 let LAST_MONTH = "LAST_MONTH"
 let LAST_YEAR = "LAST_YEAR"
 let LAST_WEEK = "LAST_WEEK"
+let THIS_YEAR = "THIS_YEAR"
+let THIS_MONTH = "THIS_MONTH"
+let Thirty_Days = "30Days"
+let THIS_FY = "THIS_FY"
+let LAST_FY = "LAST_FY"
+let CustomRange = "Custom Range"
 let ADMIN = 0
 
 let SERVER_DATE_FORMATE = "yyyy-MM-dd HH:mm:ss"
+
+let dateFilter = [THIS_MONTH,LAST_YEAR,"Last 30 Days",THIS_YEAR,LAST_YEAR, THIS_FY , LAST_FY, CustomRange]
+
+let categoryArr = ["Total_Out","Expense","Sent","Total_In","Sale","Received"]
+
 
 enum ServiceError: Error {
     case noInternetConnection
@@ -90,8 +103,8 @@ struct TimeAndDateHelper {
         return formatter.string(from: currentDateTime)
     }
     
-    static func getDate()->String{
-        let currentDateTime = Date()
+    static func getDate(date:Date=Date())->String{
+        let currentDateTime = date
         // initialize the date formatter and set the style
         let formatter = DateFormatter()
         formatter.timeStyle = .none
