@@ -28,6 +28,9 @@ class SignalBusinessBranchVCCollectionViewController: UICollectionViewController
         
         self.collectionView.register(EmptyCell.self, forCellWithReuseIdentifier: reuseEmptyIdentifier)
         self.navigationController?.navigationBar.prefersLargeTitles = false
+        if let type = LocalData.getUserType() , type == ADMIN{
+            longGestureSetup()
+        }
        
         
     }
@@ -88,6 +91,14 @@ class SignalBusinessBranchVCCollectionViewController: UICollectionViewController
                 self?.navigationItem.title = ""
                 self?.navigationController?.pushViewController(vc, animated: true)
             }
+            header.showReportTapped = {
+                [weak self] in
+                let vc = ReportsVC(nibName: "ReportsVC", bundle: nil)
+                vc.business__id = self?.business_id ?? ""
+                self?.navigationItem.title = ""
+                self?.navigationController?.pushViewController(vc, animated: true)
+            }
+            
             return header
         }else{
             let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier:
@@ -125,7 +136,8 @@ class SignalBusinessBranchVCCollectionViewController: UICollectionViewController
                 }
             case .failure(let er):
                 DispatchQueue.main.async {
-                    Toast.showToast(superView: self.view, message: er.localizedDescription)
+                    [weak self] in
+                    self?.collectionView.reloadData()
                 }
                 
             }
@@ -137,8 +149,73 @@ class SignalBusinessBranchVCCollectionViewController: UICollectionViewController
         let addBusinessVC = BusinessBranchVC(nibName: "BusinessBranchVC", bundle: nil)
         addBusinessVC.business_Id = business_id
         addBusinessVC.business_Name = business_name
+        addBusinessVC.completed = {
+            [weak self] in
+            self?.fetchBranchesOfBusiness()
+        }
         self.present(addBusinessVC, animated: true, completion: nil)
     }
+    
+    private func longGestureSetup(){
+        let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        lpgr.minimumPressDuration = 0.5
+        lpgr.delaysTouchesBegan = true
+        lpgr.delegate = self
+        self.collectionView.addGestureRecognizer(lpgr)
+    }
+    
+    @objc private func handleLongPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if gestureReconizer.state != UIGestureRecognizer.State.ended {
+                return
+            }
+        let p = gestureReconizer.location(in: self.collectionView)
+        let indexPath = self.collectionView.indexPathForItem(at: p)
+
+            if let index = indexPath {
+                var _ = self.collectionView.cellForItem(at: index)
+                // do stuff with your cell, for example print the indexPath
+                showDeleteAlert(indexPath: index.item)
+            } else {
+                print("Could not find index path")
+            }
+    }
+    
+    private func showDeleteAlert(indexPath:Int)
+    {
+        let alert = UIAlertController(title: "Delete Branch", message: "are you sure to delete \(self.dataArr[indexPath].name)", preferredStyle: .alert)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (_) in
+            guard let type = LocalData.getUser() , let id = type.data.first?.id else{return}
+            let para = ["business_id":"\(self.business_id ?? "")","branch_id":"\(self.dataArr[indexPath].id)","id":"\(id)"]
+            Toast.showActivity(superView: self.view)
+            DataService.shared.generalApiForAddingStaff(urlPath: EndPoints.delete_business, para: para) { (result) in
+                switch result{
+                case .success:
+                    DispatchQueue.main.async {
+                        [weak self] in
+                        Toast.dismissActivity(superView: self?.view ?? UIView())
+                        self?.fetchBranchesOfBusiness()
+                        //self?.collectionView.reloadData()
+                    }
+                case .failure(let er):
+                    DispatchQueue.main.async {
+                        [weak self] in
+                        Toast.dismissActivity(superView: self?.view ?? UIView())
+                    }
+                }
+            }
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+            /// Call Delete Api
+        }
+        alert.addAction(deleteAction)
+        alert.addAction(cancelAction)
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+}
+
+extension SignalBusinessBranchVCCollectionViewController:UIGestureRecognizerDelegate{
     
 }
 
@@ -154,7 +231,8 @@ override init(frame: CGRect)    {
 
 private let dateLabel: UIButton = {
     let title = UIButton()
-    title.setTitle("ADD BUSINESS BRANCH", for: .normal)
+    title.layer.cornerRadius = 8
+    title.setTitle("+ ADD BUSINESS BRANCH", for: .normal)
     title.setTitleColor(.white, for: .normal)
     title.backgroundColor = UIColor(named: "AccentColor")
     title.isUserInteractionEnabled = true

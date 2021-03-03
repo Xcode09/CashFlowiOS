@@ -76,7 +76,16 @@ final class DataService{
         URLSession.shared.dataTask(with: request) { (Data, response, error) in
             if let httpRes = response as? HTTPURLResponse, httpRes.statusCode != 200
             {
-                compilationHandler(.failure(ServiceError.other))
+                guard let data = Data else {
+                    return compilationHandler(.failure(ServiceError.other))
+                }
+                do{
+                    let user = try JSONDecoder.init().decode(ErrorResponse.self, from: data)
+                    compilationHandler(.failure(ServiceError.custom(user.message)))
+                }
+                catch let er {
+                    compilationHandler(.failure(ServiceError.custom(er.localizedDescription)))
+                }
             }
             else
             {

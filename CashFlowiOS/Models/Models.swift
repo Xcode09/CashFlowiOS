@@ -16,7 +16,7 @@ struct LoginDataModel:Codable {
     let name: String
     let user_type: Int
     let email: String
-    let business_type:String
+    let business_type:String?
     let business_branch_code: Int?
     let created_at: String
 }

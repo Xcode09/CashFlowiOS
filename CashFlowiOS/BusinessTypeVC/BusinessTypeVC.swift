@@ -34,8 +34,9 @@ class BusinessTypeVC: UICollectionViewController,UICollectionViewDelegateFlowLay
         
         
         // Do any additional setup after loading the view.
-        
-        
+        if let type = LocalData.getUserType() , type == ADMIN{
+            longGestureSetup()
+        }
     
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -69,7 +70,7 @@ class BusinessTypeVC: UICollectionViewController,UICollectionViewDelegateFlowLay
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! BusinessTypeCell
-        cell.setCardView()
+        cell.layer.cornerRadius = 8
         cell.model = dataArr[indexPath.item]
         return cell
     }
@@ -101,11 +102,7 @@ class BusinessTypeVC: UICollectionViewController,UICollectionViewDelegateFlowLay
             //header.backgroundColor = .red
             footer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(performAction)))
             
-//            footer.addBusinessTapped = {
-//                [weak self] in
-//                let addBusinessVC = AddBusinessVC(nibName: "AddBusinessVC", bundle: nil)
-//                self?.present(addBusinessVC, animated: true, completion: nil)
-//            }
+            
             return footer
         }
         return collectionView.dequeueReusableCell(withReuseIdentifier: reuseEmptyIdentifier, for: indexPath)
@@ -129,7 +126,7 @@ class BusinessTypeVC: UICollectionViewController,UICollectionViewDelegateFlowLay
 
             // 8 - space between 3 collection cells
             // 4 - 4 times gap will appear between cell.
-                    return CGSize(width: (size.width - 4 * 8)/3, height: 180)
+                    return CGSize(width: (size.width - 4 * 5)/3, height: 180)
 //            return CGSize(width: (self.collectionView.frame.width/3.0) - 8 , height: (self.collectionView.frame.height/4.7))
         }
     
@@ -148,6 +145,10 @@ class BusinessTypeVC: UICollectionViewController,UICollectionViewDelegateFlowLay
     
     @objc private func performAction(){
         let addBusinessVC = AddBusinessVC(nibName: "AddBusinessVC", bundle: nil)
+        addBusinessVC.completed = {
+            [weak self] in
+            self?.fetchAllUserBuisness()
+        }
         self.present(addBusinessVC, animated: true, completion: nil)
     }
     
@@ -170,8 +171,65 @@ class BusinessTypeVC: UICollectionViewController,UICollectionViewDelegateFlowLay
         }
     }
     
+    private func longGestureSetup(){
+        let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        lpgr.minimumPressDuration = 0.5
+        lpgr.delaysTouchesBegan = true
+        lpgr.delegate = self
+        self.collectionView.addGestureRecognizer(lpgr)
+    }
+    @objc private func handleLongPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if gestureReconizer.state != UIGestureRecognizer.State.ended {
+                return
+            }
+        let p = gestureReconizer.location(in: self.collectionView)
+        let indexPath = self.collectionView.indexPathForItem(at: p)
+
+            if let index = indexPath {
+                var _ = self.collectionView.cellForItem(at: index)
+                // do stuff with your cell, for example print the indexPath
+                showDeleteAlert(indexPath: index.item)
+            } else {
+                print("Could not find index path")
+            }
+    }
+    
+    private func showDeleteAlert(indexPath:Int)
+    {
+        let alert = UIAlertController(title: "Delete Business", message: "are you sure to delete \(self.dataArr[indexPath].name)", preferredStyle: .alert)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (_) in
+            guard let type = LocalData.getUser() , let id = type.data.first?.id else{return}
+            let para = ["business_id":"\(self.dataArr[indexPath].id)","id":"\(id)"]
+            Toast.showActivity(superView: self.view)
+            DataService.shared.generalApiForAddingStaff(urlPath: EndPoints.delete_business, para: para) { (result) in
+                switch result{
+                case .success:
+                    DispatchQueue.main.async {
+                        [weak self] in
+                        Toast.dismissActivity(superView: self?.view ?? UIView())
+                        self?.fetchAllUserBuisness()
+                        //self?.collectionView.reloadData()
+                    }
+                case .failure(let er):
+                    print(er)
+                }
+            }
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+            /// Call Delete Api
+        }
+        alert.addAction(deleteAction)
+        alert.addAction(cancelAction)
+        
+        self.present(alert, animated: true, completion: nil)
+    }
     
     
+    
+}
+
+
+extension BusinessTypeVC:UIGestureRecognizerDelegate{
     
 }
 class Header: UICollectionViewCell  {
@@ -216,7 +274,8 @@ override init(frame: CGRect)    {
 
 private let dateLabel: UIButton = {
     let title = UIButton()
-    title.setTitle("ADD BUSINESS", for: .normal)
+    title.layer.cornerRadius = 8
+    title.setTitle("+ ADD BUSINESS", for: .normal)
     title.setTitleColor(.white, for: .normal)
     title.backgroundColor = UIColor(named: "AccentColor")
     title.isUserInteractionEnabled = true

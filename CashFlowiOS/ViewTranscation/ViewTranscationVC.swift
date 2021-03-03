@@ -10,13 +10,14 @@ import UIKit
 class ViewTranscationVC: UIViewController {
 
     var transcationId = ""
+    var branchId = ""
     @IBOutlet weak var vocherImage:UIImageView!{
         didSet{
             vocherImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pickImage)))
         }
     }
     
-    @IBOutlet weak var vocherNumber:UITextField!
+    @IBOutlet weak var vocherNumber:UILabel!
     @IBOutlet weak var particulars:UITextView!{
         didSet{
             particulars.applyCardView()
@@ -25,41 +26,41 @@ class ViewTranscationVC: UIViewController {
     
     @IBOutlet weak var balanceView:UITextView!{
         didSet{
-            balanceView.applyCardView()
+            //balanceView.applyCardView()
         }
     }
-    @IBOutlet weak var saleBtn:UIButton!{
-        didSet{
-           
-            saleBtn.setCardView()
-            saleBtn.isEnabled = false
-        }
-    }
+//    @IBOutlet weak var saleBtn:UIButton!{
+//        didSet{
+//
+//            saleBtn.setCardView()
+//            saleBtn.isEnabled = false
+//        }
+//    }
     
     @IBOutlet weak var bottomLabel:UILabel!
     
     @IBOutlet weak var in_outLabel:UILabel!
-    @IBOutlet weak var bottomTime:UILabel!
-    @IBOutlet weak var topTime:UILabel!
+//    @IBOutlet weak var bottomTime:UILabel!
+//    @IBOutlet weak var topTime:UILabel!
     @IBOutlet weak var topDate:UILabel!
-    @IBOutlet weak var receviedBtn:UIButton!{
-        didSet{
-            receviedBtn.setCardView()
-            receviedBtn.isEnabled = false
-        }
-    }
-    @IBOutlet weak var expenseBtn:UIButton!{
-        didSet{
-            expenseBtn.setCardView()
-            receviedBtn.isEnabled = false
-        }
-    }
-    @IBOutlet weak var sentBtn:UIButton!{
-        didSet{
-            sentBtn.setCardView()
-            sentBtn.isEnabled = false
-        }
-    }
+//    @IBOutlet weak var receviedBtn:UIButton!{
+//        didSet{
+//            receviedBtn.setCardView()
+//            receviedBtn.isEnabled = false
+//        }
+//    }
+//    @IBOutlet weak var expenseBtn:UIButton!{
+//        didSet{
+//            expenseBtn.setCardView()
+//            expenseBtn.isEnabled = false
+//        }
+//    }
+//    @IBOutlet weak var sentBtn:UIButton!{
+//        didSet{
+//            sentBtn.setCardView()
+//            sentBtn.isEnabled = false
+//        }
+//    }
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -78,6 +79,14 @@ class ViewTranscationVC: UIViewController {
 //        pickerController.mediaTypes = ["public.image"]
 //        pickerController.sourceType = .photoLibrary
 //        self.present(pickerController, animated: true, completion: nil)
+    }
+    
+    @IBAction private func editTranscation(_ sender:UIButton)
+    {
+        let vc = EditTranscation(nibName: "EditTranscation", bundle: nil)
+        vc.transcationId =  transcationId
+        vc.branchId = branchId
+        self.present(vc, animated: true, completion: nil)
     }
     
    private func getDetails(){
@@ -106,27 +115,35 @@ class ViewTranscationVC: UIViewController {
     
     private func updateUID(data:TranscationDataModel)
     {
-        balanceView.text = "\(data.balance)"
+        
         particulars.text = data.description
         vocherNumber.text = data.voucher_no
         bottomLabel.text = data.user_email
-        bottomTime.text =  TimeAndDateHelper.getServerTime(date: data.created_at)
-        topDate.text = TimeAndDateHelper.getServerDate(with: data.created_at)
-        topTime.text = TimeAndDateHelper.getServerTime(date: data.created_at)
+//        bottomTime.text =  TimeAndDateHelper.getServerTime(date: data.created_at)
+        topDate.text = data.created_at
+//        topTime.text = TimeAndDateHelper.getServerTime(date: data.created_at)
         if data.category == Expense{
-            expenseBtn.backgroundColor = .red
-            in_outLabel.text = "OUT"
+//            expenseBtn.backgroundColor = UIColor(named: "OUTCLR")
+//            expenseBtn.setTitleColor(.white, for: .normal)
+            in_outLabel.text = "Expense"
+            balanceView.text = "\(data.balance) INR"
         }
         else if data.category == Sent{
-            sentBtn.backgroundColor = .red
-            in_outLabel.text = "OUT"
+//            sentBtn.backgroundColor = UIColor(named: "OUTCLR")
+//            sentBtn.setTitleColor(.white, for: .normal)
+            in_outLabel.text = "Sent"
+            balanceView.text = "\(data.balance) INR"
         }
         else if data.category == Received{
-            receviedBtn.backgroundColor = .red
-            in_outLabel.text = "IN"
+//            receviedBtn.backgroundColor = UIColor(named: "INCLR")
+//            receviedBtn.setTitleColor(.white, for: .normal)
+            in_outLabel.text = "Received"
+            balanceView.text = "\(data.balance) INR"
         }else{
-            saleBtn.backgroundColor = .red
-            in_outLabel.text = "IN"
+//            saleBtn.backgroundColor = UIColor(named: "INCLR")
+//            saleBtn.setTitleColor(.white, for: .normal)
+            in_outLabel.text = "Sale"
+            balanceView.text = "\(data.balance) INR"
         }
         do{
             guard let url = URL(string: data.voucher_url ?? "") else {return}

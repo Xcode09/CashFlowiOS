@@ -13,6 +13,7 @@ class BusinessBranchVC: UIViewController {
     @IBOutlet weak private var branchName:UITextField!
     var business_Name = ""
     var business_Id = ""
+    var completed:(()->Void)?
     @IBOutlet weak private var businessName:UILabel!{
         didSet{
             businessName.text = business_Name
@@ -25,6 +26,9 @@ class BusinessBranchVC: UIViewController {
         // Do any additional setup after loading the view.
     }
 
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
 
     @IBAction private func saveBtn(_ sender:UIButton){
         guard let name = branchName.text,
@@ -42,6 +46,8 @@ class BusinessBranchVC: UIViewController {
                     [weak self] in
                     Toast.dismissActivity(superView: self?.view ?? UIView())
                     Toast.showToast(superView: self?.view ?? UIView(), message: "Added..")
+                    self?.completed?()
+                    self?.dismiss(animated: true, completion: nil)
                 }
             case .failure(let er):
                 DispatchQueue.main.async {

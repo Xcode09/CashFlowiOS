@@ -10,6 +10,7 @@ import UIKit
 class AddBusinessVC: UIViewController {
 
     @IBOutlet weak private var businessName:UITextField!
+    var completed:(()->Void)?
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -17,7 +18,9 @@ class AddBusinessVC: UIViewController {
     }
 
 
-    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
     @IBAction private func saveBtn(_ sender:UIButton){
         guard let name = businessName.text, name != "",
               let us_id = LocalData.getUserID()
@@ -32,6 +35,8 @@ class AddBusinessVC: UIViewController {
                 DispatchQueue.main.async {
                     [weak self] in
                     Toast.dismissActivity(superView: self?.view ?? UIView())
+                    self?.completed?()
+                    self?.dismiss(animated: true, completion: nil)
                     //self?.collectionView.reloadData()
                 }
             case .failure(let er):

@@ -87,6 +87,14 @@ struct EndPoints {
     static let add_user_business = "\(EndPoints.init().baseURL)add_user_business"
     
     
+    static let delete_transcation = "\(EndPoints.init().baseURL)delete_transcation"
+    static let delete_business = "\(EndPoints.init().baseURL)delete_business"
+    
+    static let delete_branch = "\(EndPoints.init().baseURL)delete_branch"
+    
+    static let delete_user_business = "\(EndPoints.init().baseURL)delete_user_business"
+    static let delete_user_branch = "\(EndPoints.init().baseURL)delete_user_business"
+    
 }
 
 
@@ -123,8 +131,9 @@ struct TimeAndDateHelper {
 
         // initialize the date formatter and set the style
         let formatter = DateFormatter()
+        formatter.timeZone = .autoupdatingCurrent
         formatter.timeStyle = .none
-        formatter.dateStyle = .short
+        formatter.dateStyle = .medium
 
         // get the date time String from the date object
         return formatter.string(from: serverDate)
@@ -139,6 +148,7 @@ struct TimeAndDateHelper {
 
         // initialize the date formatter and set the style
         let formatter = DateFormatter()
+        formatter.timeZone = .autoupdatingCurrent
         formatter.timeStyle = .short
         formatter.dateStyle = .none
 

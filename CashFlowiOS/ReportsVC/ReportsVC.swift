@@ -67,12 +67,24 @@ class ReportsVC: UIViewController{
         inRange.setTitle(dateFilter.first?.replacingOccurrences(of: "_", with: " "), for: .normal)
         inCategory.setTitle(categoryArr.first?.replacingOccurrences(of: "_", with: " "), for: .normal)
         branchType.isEnabled = false
-        self.business__id = "\(globalBusiness[0].id)"
-        self.branch__id = "\(branchBusiness[0].id)"
-        inSelectedRange = THIS_MONTH
-        inCategoryRange = "1"
-        
-        fetchReports(para: ["category":inCategoryRange,"id":branch__id,"dateFilter":inSelectedRange])
+        if business__id == ""
+        {
+            self.business__id = "\(globalBusiness[0].id)"
+            self.branch__id = "\(branchBusiness[0].id)"
+            inSelectedRange = THIS_MONTH
+            inCategoryRange = "1"
+            
+            fetchReports(para: ["category":inCategoryRange,"id":branch__id,"dateFilter":inSelectedRange])
+        }
+        else{
+            //self.business__id = "\(globalBusiness[0].id)"
+            self.branch__id = "\(branchBusiness[0].id)"
+            inSelectedRange = THIS_MONTH
+            inCategoryRange = "1"
+            
+            fetchReports(para: ["category":inCategoryRange,"id":branch__id,"dateFilter":inSelectedRange])
+        }
+       
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -86,7 +98,10 @@ class ReportsVC: UIViewController{
         
     }
 
-
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
     
     @IBAction private func businessTypeBtn(_ sender:UIButton)
     {
@@ -129,7 +144,8 @@ class ReportsVC: UIViewController{
         dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
             if dateFilter[index] == CustomRange {
                 customRangeView.isHidden = false
-                inSelectedRange = dateFilter[index]
+                inSelectedRange = "Custom Range"
+                inRange.setTitle("Custom Range", for: .normal)
                 self.navigationItem.rightBarButtonItem = nil
             }
             else
@@ -205,12 +221,14 @@ class ReportsVC: UIViewController{
         inChart.delegate = self
         var enteris = [ChartDataEntry]()
         guard dataArr.count > 0 else {
+            inChart.data = nil
+            inChart.noDataText = "No Data Found"
             return
         }
         for i in 0..<data.count{
             enteris.append(ChartDataEntry(x: Double(i), y: Double(data[i].balance)))
         }
-        let vc = LineChartDataSet(entries: enteris, label: inCategoryRange)
+        let vc = LineChartDataSet(entries: enteris, label: getlabel())
         let da = LineChartData(dataSet: vc)
         //da.dataSets[0].valueFormatter = self
         inChart.xAxis.labelTextColor = .clear
@@ -222,9 +240,40 @@ class ReportsVC: UIViewController{
     
     @objc private func startDate(date:UIDatePicker){
         startDateView.text = TimeAndDateHelper.getDate(date: date.date)
+        startDateView.resignFirstResponder()
     }
     @objc private func endDate(date:UIDatePicker){
         endDateView.text = TimeAndDateHelper.getDate(date: date.date)
+        endDateView.resignFirstResponder()
+    }
+    
+    @IBAction private func customRangeBtn(_ sender:UIButton)
+    {
+        if let statDate = startDateView.text, statDate != "",let endText = endDateView.text, endText != ""
+        {
+            fetchReports(para: ["category":inCategoryRange,"id":branch__id,"dateFilter":inSelectedRange,"start_time":statDate,"end_time":endText])
+        }
+        
+    }
+    
+    private func getlabel()->String
+    {
+        switch inCategoryRange {
+        case "\(Sale)":
+            return "Sale"
+        case "\(Expense)":
+            return "Expense"
+        case "\(Received)":
+            return "Received"
+        case "\(Sent)":
+            return "Sent"
+        case "\(Total_In)":
+            return "Total_In"
+        case "\(Total_Out)":
+            return "Total_Out"
+        default:
+            return ""
+        }
     }
 }
 

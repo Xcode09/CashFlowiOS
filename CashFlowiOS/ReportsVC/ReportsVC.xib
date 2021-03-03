@@ -108,24 +108,27 @@
                                             <rect key="frame" x="20" y="198" width="358" height="60"/>
                                             <subviews>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Select Start Date" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="amK-Ch-qEi">
-                                                    <rect key="frame" x="0.0" y="0.0" width="140" height="60"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="130" height="60"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="140" id="pTy-Eb-lJR"/>
+                                                        <constraint firstAttribute="width" constant="130" id="pTy-Eb-lJR"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Select End Date" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IKD-q1-H69">
-                                                    <rect key="frame" x="160" y="0.0" width="132" height="60"/>
+                                                    <rect key="frame" x="150" y="0.0" width="158" height="60"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xuB-NA-eqL">
-                                                    <rect key="frame" x="312" y="0.0" width="46" height="60"/>
+                                                    <rect key="frame" x="328" y="0.0" width="30" height="60"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="46" id="UAV-L7-QqT"/>
+                                                        <constraint firstAttribute="width" constant="30" id="UAV-L7-QqT"/>
                                                     </constraints>
                                                     <state key="normal" image="magnifyingglass" catalog="system"/>
+                                                    <connections>
+                                                        <action selector="customRangeBtn:" destination="-1" eventType="touchUpInside" id="fkf-X6-QDy"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -192,7 +195,7 @@
     <resources>
         <image name="magnifyingglass" catalog="system" width="128" height="115"/>
         <namedColor name="AccentColor">
-            <color red="0.30980392156862746" green="0.61176470588235299" blue="0.94509803921568625" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.011764705882352941" green="0.60784313725490191" blue="0.89803921568627454" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

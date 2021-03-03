@@ -33,7 +33,7 @@ class BranchDetailVC: UICollectionViewCell {
                 desc.text = t.description
                 user_email.text = t.user_email
                 voucherNo.attributedText = mutableAttrString1
-                create_at.text = TimeAndDateHelper.getServerDate(with: t.created_at)
+                create_at.text = "\(TimeAndDateHelper.getServerDate(with: t.created_at)) \(TimeAndDateHelper.getServerTime(date: t.created_at))"
             }
             else
             {
@@ -48,7 +48,7 @@ class BranchDetailVC: UICollectionViewCell {
                 desc.text = t.description
                 voucherNo.attributedText = mutableAttrString1
                 user_email.text = t.user_email
-                create_at.text = TimeAndDateHelper.getServerDate(with: t.created_at)
+                create_at.text = "\(TimeAndDateHelper.getServerDate(with: t.created_at)) \(TimeAndDateHelper.getServerTime(date: t.created_at))"
             }
         }
     }

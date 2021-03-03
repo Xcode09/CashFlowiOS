@@ -25,12 +25,7 @@ class SignalBranchDetailVC: UIViewController {
     }
     @IBOutlet weak private var privatereportBtn:UIButton!
     @IBOutlet weak private var balance:UILabel!
-    var isAdmin:Bool?{
-        didSet{
-            adminPowerBtn.isHidden = false
-            showBranchUsers.isHidden = false
-        }
-    }
+    var isAdmin:Bool?
     @IBOutlet weak private var collectionView:UICollectionView!
     {
         didSet
@@ -52,7 +47,13 @@ class SignalBranchDetailVC: UIViewController {
         self.branchName.text = branch_Name
         self.busineeName.text = business_Name
         // Do any additional setup after loading the view.
-        
+        if isAdmin != nil
+        {
+            adminPowerBtn.isHidden = false
+            showBranchUsers.isHidden = false
+            longGestureSetup()
+            
+        }
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -87,7 +88,63 @@ class SignalBranchDetailVC: UIViewController {
     }
     
     
+    private func longGestureSetup(){
+        let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        lpgr.minimumPressDuration = 0.5
+        lpgr.delaysTouchesBegan = true
+        lpgr.delegate = self
+        self.collectionView.addGestureRecognizer(lpgr)
+    }
+    
+    @objc private func handleLongPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if gestureReconizer.state != UIGestureRecognizer.State.ended {
+                return
+            }
+        let p = gestureReconizer.location(in: self.collectionView)
+        let indexPath = self.collectionView.indexPathForItem(at: p)
+
+            if let index = indexPath {
+                var _ = self.collectionView.cellForItem(at: index)
+                // do stuff with your cell, for example print the indexPath
+                showDeleteAlert(indexPath: index.item)
+            } else {
+                print("Could not find index path")
+            }
+    }
+    
+    private func showDeleteAlert(indexPath:Int)
+    {
+        let alert = UIAlertController(title: "Delete Branch", message: "are you sure to delete \(self.dataArr[indexPath].description)", preferredStyle: .alert)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (_) in
+            guard let type = LocalData.getUser() , let id = type.data.first?.id else{return}
+            let para = ["branch_id":self.branchId,"id":"\(id)","transcation_id":"\(self.dataArr[indexPath].id)"]
+            Toast.showActivity(superView: self.view)
+            DataService.shared.generalApiForAddingStaff(urlPath: EndPoints.delete_business, para: para) { (result) in
+                switch result{
+                case .success:
+                    DispatchQueue.main.async {
+                        [weak self] in
+                        Toast.dismissActivity(superView: self?.view ?? UIView())
+                        self?.fetchAllTranscations()
+                        //self?.collectionView.reloadData()
+                    }
+                case .failure(let er):
+                    print(er)
+                }
+            }
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+            /// Call Delete Api
+        }
+        alert.addAction(deleteAction)
+        alert.addAction(cancelAction)
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
 }
+extension SignalBranchDetailVC:UIGestureRecognizerDelegate{}
 extension SignalBranchDetailVC:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout
 {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -106,22 +163,29 @@ extension SignalBranchDetailVC:UICollectionViewDelegate,UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let id = LocalData.getUserID(),
-           dataArr[indexPath.item].user_id == "\(id)" || id == ADMIN
-        {
-           // go to edit transcations
-            
-            let vc = EditTranscation(nibName: "EditTranscation", bundle: nil)
-            vc.transcationId =  "\(dataArr[indexPath.item].id)"
-            vc.branchId = branchId
-            self.present(vc, animated: true, completion: nil)
-        }
-        else
-        {
-            let vc = ViewTranscationVC(nibName: "ViewTranscationVC", bundle: nil)
-            vc.transcationId =  "\(dataArr[indexPath.item].id)"
-            self.present(vc, animated: true, completion: nil)
-        }
+        
+        let vc = ViewTranscationVC(nibName: "ViewTranscationVC", bundle: nil)
+        vc.transcationId =  "\(dataArr[indexPath.item].id)"
+        vc.branchId = branchId
+        self.present(vc, animated: true, completion: nil)
+        
+        
+//        if let id = LocalData.getUserID(),
+//           dataArr[indexPath.item].user_id == "\(id)" || id == ADMIN
+//        {
+//           // go to edit transcations
+//
+//            let vc = EditTranscation(nibName: "EditTranscation", bundle: nil)
+//            vc.transcationId =  "\(dataArr[indexPath.item].id)"
+//            vc.branchId = branchId
+//            self.present(vc, animated: true, completion: nil)
+//        }
+//        else
+//        {
+//            let vc = ViewTranscationVC(nibName: "ViewTranscationVC", bundle: nil)
+//            vc.transcationId =  "\(dataArr[indexPath.item].id)"
+//            self.present(vc, animated: true, completion: nil)
+//        }
     }
     
     
@@ -133,7 +197,7 @@ extension SignalBranchDetailVC:UICollectionViewDelegate,UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return .init(width: collectionView.frame.width - 5, height: 160)
+        return .init(width: collectionView.frame.width, height: 160)
     }
     
     //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
@@ -167,12 +231,14 @@ extension SignalBranchDetailVC:UICollectionViewDelegate,UICollectionViewDataSour
 
 extension UICollectionViewCell{
     func setCardView(){
-        layer.cornerRadius = 8.0
-        layer.borderColor = UIColor.gray.cgColor
-        layer.borderWidth = 0.3
+        layer.cornerRadius = 10.0
         layer.shadowColor = UIColor.gray.cgColor
         layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
         layer.shadowRadius = 8.0
+        layer.borderWidth = 0.4
+        layer.borderColor = UIColor.gray.cgColor
         layer.shadowOpacity = 0.7
+        
+        
     }
 }

@@ -21,6 +21,7 @@ class AddUser: UIViewController {
     @IBOutlet weak private var branchName:UILabel!
     @IBOutlet weak private var email:UITextField!
     var isBranch:Bool?
+    var completed:(()->Void)?
     override func viewDidLoad() {
         super.viewDidLoad()
         if (isBranch != nil)
@@ -34,13 +35,15 @@ class AddUser: UIViewController {
     @IBAction private func addUser(_ sender:UIButton)
     {
         if (isBranch != nil && email.text != ""){
-            addUserTo(url: EndPoints.add_user_branch, para: ["email":email.text!,"business_id":business_Id,"id":branch_Id])
+            addUserTo(url: EndPoints.add_user_branch, para: ["email":email.text!,"id":business_Id,"branch_id":branch_Id])
         }else if (isBranch == nil && email.text != ""){
             addUserTo(url: EndPoints.add_user_business, para: ["email":email.text!,"business_id":business_Id])
         }
     }
     
-    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
     private func addUserTo(url:String,para:[String:String]){
         guard let user = LocalData.getUser(), let _ = user.data.first?.id else {return}
         Toast.showActivity(superView: self.view)
@@ -53,6 +56,8 @@ class AddUser: UIViewController {
                     [weak self] in
                     Toast.dismissActivity(superView: self!.view)
                     Toast.showToast(superView: self!.view, message: "Saved")
+                    self?.completed?()
+                    self?.dismiss(animated: true, completion: nil)
                 }
             case .failure(let er):
                

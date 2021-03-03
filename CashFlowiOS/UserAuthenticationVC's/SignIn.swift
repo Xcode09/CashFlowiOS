@@ -27,11 +27,13 @@ class SignIn: UIViewController {
         }
         let para = ["email":emailText,
                     "password":passText]
-        
+        Toast.showActivity(superView: self.view)
         DataService.shared.login(urlPath: EndPoints.login, para: para) { (result) in
             switch result{
             case .success( _):
                 DispatchQueue.main.async {
+                    [weak self] in
+                    Toast.dismissActivity(superView: self?.view ?? UIView())
                     let window = (UIApplication.shared.delegate as! AppDelegate).window!
                     let businessType = BusinessTypeVC(nibName: "BusinessTypeVC", bundle: nil)
                     let nav = UINavigationController(rootViewController: businessType)
@@ -41,7 +43,12 @@ class SignIn: UIViewController {
                 }
                
             case .failure(let er):
-                print(er)
+                DispatchQueue.main.async {
+                    [weak self] in
+                    Toast.dismissActivity(superView: self?.view ?? UIView())
+                    Toast.showToast(superView: self?.view ?? UIView(), message: er.localizedDescription)
+                }
+                
             }
         }
     }
